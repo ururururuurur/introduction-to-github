@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Example</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500" style="border: 1px solid black;"></canvas>
+    <script src="src/script.js"></script>
+</body>
+</html>
+
+Boris, [08.12.2024 15:00]
+document.addEventListener("DOMContentLoaded", function () {
+    // Получаем доступ к canvas и контексту
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+
+    // Устанавливаем размеры холста
+    var width = canvas.width;
+    var height = canvas.height;
+
+    // Функция для рисования круга
+    var circle = function (x, y, radius, fillCircle) {
+        ctx.beginPath(); // Начинаем путь для рисования
+        ctx.arc(x, y, radius, 0, Math.PI * 2, false); // Рисуем окружность
+        if (fillCircle) {
+            ctx.fill(); // Заливаем круг, если fillCircle = true
+        } else {
+            ctx.stroke(); // Иначе рисуем только контур
+        }
+    };
+
+    // Конструктор объекта Ball (мяч)
+    var Ball = function () {
+        this.x = width / 2; // Начальная позиция мяча по X
+        this.y = height / 2; // Начальная позиция мяча по Y
+        this.xSpeed = Math.random() * 10 - 5; // Скорость по X
+        this.ySpeed = Math.random() * 10 - 5; // Скорость по Y
+    };
+
+    // Метод движения мяча
+    Ball.prototype.move = function () {
+        this.x += this.xSpeed; // Изменение позиции по X
+        this.y += this.ySpeed; // Изменение позиции по Y
+
+        // Проверка на столкновение с границами холста
+        if (this.x < 0  this.x > width) { 
+            this.xSpeed = -this.xSpeed; // Меняем направление по X
+        }
+
+        if (this.y < 0  this.y > height) { 
+            this.ySpeed = -this.ySpeed; // Меняем направление по Y
+        }
+    };
+
+    // Метод рисования мяча
+    Ball.prototype.draw = function () {
+        circle(this.x, this.y, 10, true); // Рисуем круг (мяч)
+    };
+
+    // Создаём объект мяча
+    var ball = new Ball();
+
+    // Анимация
+    setInterval(function () {
+        ctx.clearRect(0, 0, width, height); // Очищаем холст
+        ball.move(); // Двигаем мяч
+        ball.draw(); // Рисуем мяч
+    }, 30);
+});
